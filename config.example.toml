@@ -1,0 +1,38 @@
+# journal configuration
+#
+# Copy to ~/.config/journal/config.toml (or set $XDG_CONFIG_HOME) and edit.
+# Every value below is also the built-in default, so a missing file behaves
+# exactly like this example. Date patterns use strftime-style tokens, the same
+# ones you'd pass to `date +...`.
+#
+# This file reproduces the original today.sh / jcommit.sh setup 1:1.
+
+# Root directory under which dated entries are stored. ~ and $ENV are expanded.
+journal_dir = "~/journal"
+
+[editor]
+cmd  = "nvim"
+# {line} -> cursor line below; {file} -> entry path (appended if omitted).
+args = ["+{line}"]
+line = 3
+
+[linter]
+enabled = true
+cmd     = "markdownlint-cli2"
+args    = ["--fix"]
+# Used only when `cmd` is not found on PATH (e.g. a Mason install).
+fallback_path = "~/.local/share/nvim/mason/bin/markdownlint-cli2"
+
+[format]
+dir    = "%Y/%m-%b"               # -> 2026/06-jun   (directory under journal_dir)
+file   = "%d-%a.md"               # -> 28-sun.md     (entry filename)
+header = "# %B %e, %Y (%A %H:%M)" # -> # june 28, 2026 (sunday 16:43)
+commit = "%Y-%m-%d"               # -> 2026-06-28    (commit message date prefix)
+
+[format.transform]
+lowercase      = true  # lowercase dir, file and header
+squeeze_spaces = true  # collapse the double space %e leaves on single-digit days
+
+[commit]
+# Appended to the entry before committing. {message} is the commit message.
+append_format = "\n\n> {message}\n"
